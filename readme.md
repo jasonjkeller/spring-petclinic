@@ -20,7 +20,7 @@ Run with the OpenTelemetry Java agent and logging exporter. OpenTelemetry loggin
 java -javaagent:opentelemetry/opentelemetry-javaagent-all.jar -Dotel.exporter=logging -jar target/*.jar
 ```
 
-Alternatively, use the New Relic OTel exporter: 
+Alternatively, use the [New Relic OTel exporter](https://github.com/newrelic/opentelemetry-exporter-java): 
 
 ```
 java -javaagent:opentelemetry/opentelemetry-javaagent-all.jar \
