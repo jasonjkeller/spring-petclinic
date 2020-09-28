@@ -19,6 +19,11 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import io.opentelemetry.OpenTelemetry;
+import io.opentelemetry.context.Scope;
+import io.opentelemetry.trace.Span;
+import io.opentelemetry.trace.Status;
+import io.opentelemetry.trace.Tracer;
 import org.springframework.samples.petclinic.visit.Visit;
 import org.springframework.samples.petclinic.visit.VisitRepository;
 import org.springframework.stereotype.Controller;
@@ -74,19 +79,47 @@ class VisitController {
 	// Spring MVC calls method loadPetWithVisit(...) before initNewVisitForm is called
 	@GetMapping("/owners/*/pets/{petId}/visits/new")
 	public String initNewVisitForm(@PathVariable("petId") int petId, Map<String, Object> model) {
-		return "pets/createOrUpdateVisitForm";
+		Tracer tracer = OpenTelemetry.getTracerProvider().get("spring-petclinic-otel-manual-inst", "1.0");
+		Span span = tracer.spanBuilder("GET /owners/*/pets/{petId}/visits/new").setSpanKind(Span.Kind.INTERNAL)
+				.startSpan();
+
+		try (Scope scope = tracer.withSpan(span)) {
+			return "pets/createOrUpdateVisitForm";
+		}
+		catch (Throwable t) {
+			Status status = Status.UNKNOWN.withDescription(t.getMessage());
+			span.setStatus(status);
+		}
+		finally {
+			span.end();
+		}
+		return null;
 	}
 
 	// Spring MVC calls method loadPetWithVisit(...) before processNewVisitForm is called
 	@PostMapping("/owners/{ownerId}/pets/{petId}/visits/new")
 	public String processNewVisitForm(@Valid Visit visit, BindingResult result) {
-		if (result.hasErrors()) {
-			return "pets/createOrUpdateVisitForm";
+		Tracer tracer = OpenTelemetry.getTracerProvider().get("spring-petclinic-otel-manual-inst", "1.0");
+		Span span = tracer.spanBuilder("POST /owners/{ownerId}/pets/{petId}/visits/new").setSpanKind(Span.Kind.INTERNAL)
+				.startSpan();
+
+		try (Scope scope = tracer.withSpan(span)) {
+			if (result.hasErrors()) {
+				return "pets/createOrUpdateVisitForm";
+			}
+			else {
+				this.visits.save(visit);
+				return "redirect:/owners/{ownerId}";
+			}
 		}
-		else {
-			this.visits.save(visit);
-			return "redirect:/owners/{ownerId}";
+		catch (Throwable t) {
+			Status status = Status.UNKNOWN.withDescription(t.getMessage());
+			span.setStatus(status);
 		}
+		finally {
+			span.end();
+		}
+		return null;
 	}
 
 }

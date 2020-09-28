@@ -16,6 +16,11 @@
 
 package org.springframework.samples.petclinic.system;
 
+import io.opentelemetry.OpenTelemetry;
+import io.opentelemetry.context.Scope;
+import io.opentelemetry.trace.Span;
+import io.opentelemetry.trace.Status;
+import io.opentelemetry.trace.Tracer;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -24,7 +29,20 @@ class WelcomeController {
 
 	@GetMapping("/")
 	public String welcome() {
-		return "welcome";
+		Tracer tracer = OpenTelemetry.getTracerProvider().get("spring-petclinic-otel-manual-inst", "1.0");
+		Span span = tracer.spanBuilder("GET /").setSpanKind(Span.Kind.INTERNAL).startSpan();
+
+		try (Scope scope = tracer.withSpan(span)) {
+			return "welcome";
+		}
+		catch (Throwable t) {
+			Status status = Status.UNKNOWN.withDescription(t.getMessage());
+			span.setStatus(status);
+		}
+		finally {
+			span.end();
+		}
+		return null;
 	}
 
 }

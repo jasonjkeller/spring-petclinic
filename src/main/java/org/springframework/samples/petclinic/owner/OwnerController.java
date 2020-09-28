@@ -15,6 +15,11 @@
  */
 package org.springframework.samples.petclinic.owner;
 
+import io.opentelemetry.OpenTelemetry;
+import io.opentelemetry.context.Scope;
+import io.opentelemetry.trace.Span;
+import io.opentelemetry.trace.Status;
+import io.opentelemetry.trace.Tracer;
 import org.springframework.samples.petclinic.visit.VisitRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -57,73 +62,151 @@ class OwnerController {
 
 	@GetMapping("/owners/new")
 	public String initCreationForm(Map<String, Object> model) {
-		Owner owner = new Owner();
-		model.put("owner", owner);
-		return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
+		Tracer tracer = OpenTelemetry.getTracerProvider().get("spring-petclinic-otel-manual-inst", "1.0");
+		Span span = tracer.spanBuilder("GET /owners/new").setSpanKind(Span.Kind.INTERNAL).startSpan();
+
+		try (Scope scope = tracer.withSpan(span)) {
+			Owner owner = new Owner();
+			model.put("owner", owner);
+			span.end();
+			return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
+		}
+		catch (Throwable t) {
+			Status status = Status.UNKNOWN.withDescription(t.getMessage());
+			span.setStatus(status);
+		}
+		finally {
+			span.end();
+		}
+		return null;
 	}
 
 	@PostMapping("/owners/new")
 	public String processCreationForm(@Valid Owner owner, BindingResult result) {
-		if (result.hasErrors()) {
-			return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
+		Tracer tracer = OpenTelemetry.getTracerProvider().get("spring-petclinic-otel-manual-inst", "1.0");
+		Span span = tracer.spanBuilder("POST /owners/new").setSpanKind(Span.Kind.INTERNAL).startSpan();
+
+		try (Scope scope = tracer.withSpan(span)) {
+			if (result.hasErrors()) {
+				return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
+			}
+			else {
+				this.owners.save(owner);
+				return "redirect:/owners/" + owner.getId();
+			}
 		}
-		else {
-			this.owners.save(owner);
-			return "redirect:/owners/" + owner.getId();
+		catch (Throwable t) {
+			Status status = Status.UNKNOWN.withDescription(t.getMessage());
+			span.setStatus(status);
 		}
+		finally {
+			span.end();
+		}
+		return null;
 	}
 
 	@GetMapping("/owners/find")
 	public String initFindForm(Map<String, Object> model) {
-		model.put("owner", new Owner());
-		return "owners/findOwners";
+		Tracer tracer = OpenTelemetry.getTracerProvider().get("spring-petclinic-otel-manual-inst", "1.0");
+		Span span = tracer.spanBuilder("GET /owners/find").setSpanKind(Span.Kind.INTERNAL).startSpan();
+
+		try (Scope scope = tracer.withSpan(span)) {
+			model.put("owner", new Owner());
+			return "owners/findOwners";
+		}
+		catch (Throwable t) {
+			Status status = Status.UNKNOWN.withDescription(t.getMessage());
+			span.setStatus(status);
+		}
+		finally {
+			span.end();
+		}
+		return null;
 	}
 
 	@GetMapping("/owners")
 	public String processFindForm(Owner owner, BindingResult result, Map<String, Object> model) {
+		Tracer tracer = OpenTelemetry.getTracerProvider().get("spring-petclinic-otel-manual-inst", "1.0");
+		Span span = tracer.spanBuilder("GET /owners").setSpanKind(Span.Kind.INTERNAL).startSpan();
 
-		// allow parameterless GET request for /owners to return all records
-		if (owner.getLastName() == null) {
-			owner.setLastName(""); // empty string signifies broadest possible search
-		}
+		try (Scope scope = tracer.withSpan(span)) {
+			// allow parameterless GET request for /owners to return all records
+			if (owner.getLastName() == null) {
+				owner.setLastName(""); // empty string signifies broadest possible search
+			}
 
-		// find owners by last name
-		Collection<Owner> results = this.owners.findByLastName(owner.getLastName());
-		if (results.isEmpty()) {
-			// no owners found
-			result.rejectValue("lastName", "notFound", "not found");
-			return "owners/findOwners";
+			// find owners by last name
+			Collection<Owner> results = this.owners.findByLastName(owner.getLastName());
+			if (results.isEmpty()) {
+				// no owners found
+				result.rejectValue("lastName", "notFound", "not found");
+				return "owners/findOwners";
+			}
+			else if (results.size() == 1) {
+				// 1 owner found
+				owner = results.iterator().next();
+				return "redirect:/owners/" + owner.getId();
+			}
+			else {
+				// multiple owners found
+				model.put("selections", results);
+				return "owners/ownersList";
+			}
 		}
-		else if (results.size() == 1) {
-			// 1 owner found
-			owner = results.iterator().next();
-			return "redirect:/owners/" + owner.getId();
+		catch (Throwable t) {
+			Status status = Status.UNKNOWN.withDescription(t.getMessage());
+			span.setStatus(status);
 		}
-		else {
-			// multiple owners found
-			model.put("selections", results);
-			return "owners/ownersList";
+		finally {
+			span.end();
 		}
+		return null;
 	}
 
 	@GetMapping("/owners/{ownerId}/edit")
 	public String initUpdateOwnerForm(@PathVariable("ownerId") int ownerId, Model model) {
-		Owner owner = this.owners.findById(ownerId);
-		model.addAttribute(owner);
-		return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
+		Tracer tracer = OpenTelemetry.getTracerProvider().get("spring-petclinic-otel-manual-inst", "1.0");
+		Span span = tracer.spanBuilder("GET /owners/{ownerId}/edit").setSpanKind(Span.Kind.INTERNAL).startSpan();
+
+		try (Scope scope = tracer.withSpan(span)) {
+			Owner owner = this.owners.findById(ownerId);
+			model.addAttribute(owner);
+			return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
+		}
+		catch (Throwable t) {
+			Status status = Status.UNKNOWN.withDescription(t.getMessage());
+			span.setStatus(status);
+		}
+		finally {
+			span.end();
+		}
+		return null;
 	}
 
 	@PostMapping("/owners/{ownerId}/edit")
 	public String processUpdateOwnerForm(@Valid Owner owner, BindingResult result,
 			@PathVariable("ownerId") int ownerId) {
-		if (result.hasErrors()) {
-			return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
+		Tracer tracer = OpenTelemetry.getTracerProvider().get("spring-petclinic-otel-manual-inst", "1.0");
+		Span span = tracer.spanBuilder("POST /owners/{ownerId}/edit").setSpanKind(Span.Kind.INTERNAL).startSpan();
+
+		try (Scope scope = tracer.withSpan(span)) {
+			if (result.hasErrors()) {
+				return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
+			}
+			else {
+				owner.setId(ownerId);
+				this.owners.save(owner);
+				return "redirect:/owners/{ownerId}";
+			}
 		}
-		else {
-			owner.setId(ownerId);
-			this.owners.save(owner);
-			return "redirect:/owners/{ownerId}";
+		catch (Throwable t) {
+			Status status = Status.UNKNOWN.withDescription(t.getMessage());
+			span.setStatus(status);
 		}
+		finally {
+			span.end();
+		}
+		return null;
 	}
 
 	/**
@@ -133,13 +216,27 @@ class OwnerController {
 	 */
 	@GetMapping("/owners/{ownerId}")
 	public ModelAndView showOwner(@PathVariable("ownerId") int ownerId) {
-		ModelAndView mav = new ModelAndView("owners/ownerDetails");
-		Owner owner = this.owners.findById(ownerId);
-		for (Pet pet : owner.getPets()) {
-			pet.setVisitsInternal(visits.findByPetId(pet.getId()));
+		Tracer tracer = OpenTelemetry.getTracerProvider().get("spring-petclinic-otel-manual-inst", "1.0");
+		Span span = tracer.spanBuilder("GET /owners/{ownerId}").setSpanKind(Span.Kind.INTERNAL).startSpan();
+
+		try (Scope scope = tracer.withSpan(span)) {
+			ModelAndView mav = new ModelAndView("owners/ownerDetails");
+			Owner owner = this.owners.findById(ownerId);
+			for (Pet pet : owner.getPets()) {
+				pet.setVisitsInternal(visits.findByPetId(pet.getId()));
+			}
+			mav.addObject(owner);
+			return mav;
+
 		}
-		mav.addObject(owner);
-		return mav;
+		catch (Throwable t) {
+			Status status = Status.UNKNOWN.withDescription(t.getMessage());
+			span.setStatus(status);
+		}
+		finally {
+			span.end();
+		}
+		return null;
 	}
 
 }

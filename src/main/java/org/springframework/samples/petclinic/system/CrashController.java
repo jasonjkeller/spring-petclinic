@@ -15,6 +15,11 @@
  */
 package org.springframework.samples.petclinic.system;
 
+import io.opentelemetry.OpenTelemetry;
+import io.opentelemetry.context.Scope;
+import io.opentelemetry.trace.Span;
+import io.opentelemetry.trace.Status;
+import io.opentelemetry.trace.Tracer;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -30,8 +35,21 @@ class CrashController {
 
 	@GetMapping("/oups")
 	public String triggerException() {
-		throw new RuntimeException(
-				"Expected: controller used to showcase what " + "happens when an exception is thrown");
+		Tracer tracer = OpenTelemetry.getTracerProvider().get("spring-petclinic-otel-manual-inst", "1.0");
+		Span span = tracer.spanBuilder("/GET oups").setSpanKind(Span.Kind.INTERNAL).startSpan();
+
+		try (Scope scope = tracer.withSpan(span)) {
+			throw new RuntimeException(
+					"Expected: controller used to showcase what " + "happens when an exception is thrown");
+		}
+		catch (Throwable t) {
+			Status status = Status.UNKNOWN.withDescription(t.getMessage());
+			span.setStatus(status);
+		}
+		finally {
+			span.end();
+		}
+		return null;
 	}
 
 }

@@ -131,6 +131,37 @@
       <artifactId>spring-boot-devtools</artifactId>
       <optional>true</optional>
     </dependency>
+
+    <!-- New Relic OpenTelemetry exporter -->
+    <dependency>
+      <groupId>com.newrelic.telemetry</groupId>
+      <artifactId>opentelemetry-exporters-newrelic</artifactId>
+      <version>0.8.1</version>
+    </dependency>
+
+    <!-- New Relic Telemetry SDK -->
+    <dependency>
+      <groupId>com.newrelic.telemetry</groupId>
+      <artifactId>telemetry-core</artifactId>
+      <version>0.7.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.newrelic.telemetry</groupId>
+      <artifactId>telemetry-http-okhttp</artifactId>
+      <version>0.7.0</version>
+    </dependency>
+
+    <!-- OpenTelemetry -->
+    <dependency>
+      <groupId>io.opentelemetry</groupId>
+      <artifactId>opentelemetry-sdk</artifactId>
+      <version>0.8.0</version>
+    </dependency>
+    <dependency>
+      <groupId>io.opentelemetry</groupId>
+      <artifactId>opentelemetry-api</artifactId>
+      <version>0.8.0</version>
+    </dependency>
   </dependencies>
 
   <build>

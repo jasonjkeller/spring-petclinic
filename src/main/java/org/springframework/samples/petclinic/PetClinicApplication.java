@@ -16,8 +16,19 @@
 
 package org.springframework.samples.petclinic;
 
+import com.newrelic.telemetry.Attributes;
+import com.newrelic.telemetry.opentelemetry.export.NewRelicExporters;
+import com.newrelic.telemetry.opentelemetry.export.NewRelicSpanExporter;
+import io.opentelemetry.sdk.OpenTelemetrySdk;
+import io.opentelemetry.sdk.trace.TracerSdkProvider;
+import io.opentelemetry.sdk.trace.export.BatchSpanProcessor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PreDestroy;
+
+import static com.newrelic.telemetry.opentelemetry.export.AttributeNames.SERVICE_NAME;
 
 /**
  * PetClinic Spring Boot Application.
@@ -29,7 +40,27 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class PetClinicApplication {
 
 	public static void main(String[] args) {
+		NewRelicSpanExporter exporter = NewRelicSpanExporter.newBuilder().apiKey(System.getenv("INSIGHTS_INSERT_KEY"))
+				.commonAttributes(new Attributes().put(SERVICE_NAME, "spring-petclinic-otel-manual-inst")).build();
+
+		BatchSpanProcessor spanProcessor = BatchSpanProcessor.newBuilder(exporter).build();
+		TracerSdkProvider tracerSdkProvider = OpenTelemetrySdk.getTracerProvider();
+		tracerSdkProvider.addSpanProcessor(spanProcessor);
+
 		SpringApplication.run(PetClinicApplication.class, args);
+
+	}
+
+	@Component
+	public static class CleanupBean {
+
+		@PreDestroy
+		public void destroy() {
+			System.out.println("Callback triggered - @PreDestroy.");
+			// FIXME throws NPE
+			NewRelicExporters.shutdown();
+		}
+
 	}
 
 }

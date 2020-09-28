@@ -15,6 +15,11 @@
  */
 package org.springframework.samples.petclinic.owner;
 
+import io.opentelemetry.OpenTelemetry;
+import io.opentelemetry.context.Scope;
+import io.opentelemetry.trace.Span;
+import io.opentelemetry.trace.Status;
+import io.opentelemetry.trace.Tracer;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
@@ -67,47 +72,99 @@ class PetController {
 
 	@GetMapping("/pets/new")
 	public String initCreationForm(Owner owner, ModelMap model) {
-		Pet pet = new Pet();
-		owner.addPet(pet);
-		model.put("pet", pet);
-		return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+		Tracer tracer = OpenTelemetry.getTracerProvider().get("spring-petclinic-otel-manual-inst", "1.0");
+		Span span = tracer.spanBuilder("GET /pets/new").setSpanKind(Span.Kind.INTERNAL).startSpan();
+
+		try (Scope scope = tracer.withSpan(span)) {
+			Pet pet = new Pet();
+			owner.addPet(pet);
+			model.put("pet", pet);
+			return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+		}
+		catch (Throwable t) {
+			Status status = Status.UNKNOWN.withDescription(t.getMessage());
+			span.setStatus(status);
+		}
+		finally {
+			span.end();
+		}
+		return null;
 	}
 
 	@PostMapping("/pets/new")
 	public String processCreationForm(Owner owner, @Valid Pet pet, BindingResult result, ModelMap model) {
-		if (StringUtils.hasLength(pet.getName()) && pet.isNew() && owner.getPet(pet.getName(), true) != null) {
-			result.rejectValue("name", "duplicate", "already exists");
+		Tracer tracer = OpenTelemetry.getTracerProvider().get("spring-petclinic-otel-manual-inst", "1.0");
+		Span span = tracer.spanBuilder("POST /pets/new").setSpanKind(Span.Kind.INTERNAL).startSpan();
+
+		try (Scope scope = tracer.withSpan(span)) {
+			if (StringUtils.hasLength(pet.getName()) && pet.isNew() && owner.getPet(pet.getName(), true) != null) {
+				result.rejectValue("name", "duplicate", "already exists");
+			}
+			owner.addPet(pet);
+			if (result.hasErrors()) {
+				model.put("pet", pet);
+				return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+			}
+			else {
+				this.pets.save(pet);
+				return "redirect:/owners/{ownerId}";
+			}
 		}
-		owner.addPet(pet);
-		if (result.hasErrors()) {
-			model.put("pet", pet);
-			return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+		catch (Throwable t) {
+			Status status = Status.UNKNOWN.withDescription(t.getMessage());
+			span.setStatus(status);
 		}
-		else {
-			this.pets.save(pet);
-			return "redirect:/owners/{ownerId}";
+		finally {
+			span.end();
 		}
+		return null;
 	}
 
 	@GetMapping("/pets/{petId}/edit")
 	public String initUpdateForm(@PathVariable("petId") int petId, ModelMap model) {
-		Pet pet = this.pets.findById(petId);
-		model.put("pet", pet);
-		return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+		Tracer tracer = OpenTelemetry.getTracerProvider().get("spring-petclinic-otel-manual-inst", "1.0");
+		Span span = tracer.spanBuilder("GET /pets/{petId}/edit").setSpanKind(Span.Kind.INTERNAL).startSpan();
+
+		try (Scope scope = tracer.withSpan(span)) {
+			Pet pet = this.pets.findById(petId);
+			model.put("pet", pet);
+			return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+		}
+		catch (Throwable t) {
+			Status status = Status.UNKNOWN.withDescription(t.getMessage());
+			span.setStatus(status);
+		}
+		finally {
+			span.end();
+		}
+		return null;
 	}
 
 	@PostMapping("/pets/{petId}/edit")
 	public String processUpdateForm(@Valid Pet pet, BindingResult result, Owner owner, ModelMap model) {
-		if (result.hasErrors()) {
-			pet.setOwner(owner);
-			model.put("pet", pet);
-			return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+		Tracer tracer = OpenTelemetry.getTracerProvider().get("spring-petclinic-otel-manual-inst", "1.0");
+		Span span = tracer.spanBuilder("POST /pets/{petId}/edit").setSpanKind(Span.Kind.INTERNAL).startSpan();
+
+		try (Scope scope = tracer.withSpan(span)) {
+			if (result.hasErrors()) {
+				pet.setOwner(owner);
+				model.put("pet", pet);
+				return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+			}
+			else {
+				owner.addPet(pet);
+				this.pets.save(pet);
+				return "redirect:/owners/{ownerId}";
+			}
 		}
-		else {
-			owner.addPet(pet);
-			this.pets.save(pet);
-			return "redirect:/owners/{ownerId}";
+		catch (Throwable t) {
+			Status status = Status.UNKNOWN.withDescription(t.getMessage());
+			span.setStatus(status);
 		}
+		finally {
+			span.end();
+		}
+		return null;
 	}
 
 }

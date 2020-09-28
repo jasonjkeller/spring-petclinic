@@ -15,6 +15,11 @@
  */
 package org.springframework.samples.petclinic.vet;
 
+import io.opentelemetry.OpenTelemetry;
+import io.opentelemetry.context.Scope;
+import io.opentelemetry.trace.Span;
+import io.opentelemetry.trace.Status;
+import io.opentelemetry.trace.Tracer;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,21 +43,49 @@ class VetController {
 
 	@GetMapping("/vets.html")
 	public String showVetList(Map<String, Object> model) {
-		// Here we are returning an object of type 'Vets' rather than a collection of Vet
-		// objects so it is simpler for Object-Xml mapping
-		Vets vets = new Vets();
-		vets.getVetList().addAll(this.vets.findAll());
-		model.put("vets", vets);
-		return "vets/vetList";
+		Tracer tracer = OpenTelemetry.getTracerProvider().get("spring-petclinic-otel-manual-inst", "1.0");
+		Span span = tracer.spanBuilder("GET /vets.html").setSpanKind(Span.Kind.INTERNAL).startSpan();
+
+		try (Scope scope = tracer.withSpan(span)) {
+			// Here we are returning an object of type 'Vets' rather than a collection of
+			// Vet
+			// objects so it is simpler for Object-Xml mapping
+			Vets vets = new Vets();
+			vets.getVetList().addAll(this.vets.findAll());
+			model.put("vets", vets);
+			return "vets/vetList";
+		}
+		catch (Throwable t) {
+			Status status = Status.UNKNOWN.withDescription(t.getMessage());
+			span.setStatus(status);
+		}
+		finally {
+			span.end();
+		}
+		return null;
 	}
 
 	@GetMapping({ "/vets" })
 	public @ResponseBody Vets showResourcesVetList() {
-		// Here we are returning an object of type 'Vets' rather than a collection of Vet
-		// objects so it is simpler for JSon/Object mapping
-		Vets vets = new Vets();
-		vets.getVetList().addAll(this.vets.findAll());
-		return vets;
+		Tracer tracer = OpenTelemetry.getTracerProvider().get("spring-petclinic-otel-manual-inst", "1.0");
+		Span span = tracer.spanBuilder("GET /vets").setSpanKind(Span.Kind.INTERNAL).startSpan();
+
+		try (Scope scope = tracer.withSpan(span)) {
+			// Here we are returning an object of type 'Vets' rather than a collection of
+			// Vet
+			// objects so it is simpler for JSon/Object mapping
+			Vets vets = new Vets();
+			vets.getVetList().addAll(this.vets.findAll());
+			return vets;
+		}
+		catch (Throwable t) {
+			Status status = Status.UNKNOWN.withDescription(t.getMessage());
+			span.setStatus(status);
+		}
+		finally {
+			span.end();
+		}
+		return null;
 	}
 
 }
