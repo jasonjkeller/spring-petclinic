@@ -20,6 +20,16 @@ Run with the OpenTelemetry Java agent and logging exporter. OpenTelemetry loggin
 java -javaagent:opentelemetry/opentelemetry-javaagent-all.jar -Dotel.exporter=logging -jar target/*.jar
 ```
 
+Alternatively, use the New Relic OTel exporter: 
+
+```
+java -javaagent:opentelemetry/opentelemetry-javaagent-all.jar \
+     -Dotel.exporter.jar=opentelemetry/opentelemetry-exporters-newrelic-auto-0.8.1.jar \
+     -Dotel.exporter.newrelic.api.key=${INSIGHTS_INSERT_KEY} \
+     -Dotel.exporter.newrelic.service.name=spring-petclinic-otel-auto-inst \
+     -jar target/*.jar
+```
+
 You can then access petclinic here: http://localhost:8080/
 
 <img width="1042" alt="petclinic-screenshot" src="https://cloud.githubusercontent.com/assets/838318/19727082/2aee6d6c-9b8e-11e6-81fe-e889a5ddfded.png">
