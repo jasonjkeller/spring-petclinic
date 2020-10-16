@@ -30,6 +30,10 @@ java -javaagent:opentelemetry/opentelemetry-javaagent-all.jar \
      -jar target/*.jar
 ```
 
+```
+java -javaagent:/Users/jkeller/code/opentelemetry-java-instrumentation/javaagent/build/libs/opentelemetry-javaagent-0.10.0-SNAPSHOT-all.jar -Dotel.exporter=newrelic -Dnewrelic.api.key=${INSIGHTS_INSERT_KEY} -Dnewrelic.service.name=nr-otel-exporter-bundle -jar target/*.jar
+```
+
 You can then access petclinic here: http://localhost:8080/
 
 <img width="1042" alt="petclinic-screenshot" src="https://cloud.githubusercontent.com/assets/838318/19727082/2aee6d6c-9b8e-11e6-81fe-e889a5ddfded.png">
