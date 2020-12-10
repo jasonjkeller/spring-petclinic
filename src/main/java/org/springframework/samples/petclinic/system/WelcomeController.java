@@ -26,7 +26,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 class WelcomeController {
+
 	private static final String GOOD_RETURN = "Good job! But I don't add any value to this app!";
+
 	private static final String BAD_RETURN = "Bad!";
 
 	@GetMapping("/")
@@ -36,18 +38,19 @@ class WelcomeController {
 	}
 
 	private String customMethod() {
-		Tracer tracer = OpenTelemetry.getGlobalTracer("spring-petclinic-otel-manual-inst","semver:1.0.0");
+		Tracer tracer = OpenTelemetry.getGlobalTracer("spring-petclinic-otel-manual-inst", "semver:1.0.0");
 		Span span = tracer.spanBuilder("customMethod").startSpan();
 
-		// TODO when upgrading from otel sdk/api 0.10.0 this will need to change:
-		//  https://github.com/open-telemetry/opentelemetry-java/issues/2204
 		try (Scope scope = span.makeCurrent()) {
 			span.setAttribute("good-return", GOOD_RETURN);
 			return GOOD_RETURN;
-		} catch (Throwable t) {
+		}
+		catch (Throwable t) {
 			span.setStatus(StatusCode.ERROR, BAD_RETURN);
-		} finally {
-			span.end(); // closing the scope does not end the span, this has to be done manually
+		}
+		finally {
+			// closing the scope does not end the span, this has to be done manually
+			span.end();
 		}
 		return BAD_RETURN;
 	}
