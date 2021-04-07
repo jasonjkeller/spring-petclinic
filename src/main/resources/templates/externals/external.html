@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout (~{::body},'externals')}">
+
+<head>
+  <title>External Response</title>
+</head>
+
+<body>
+<h1>External URL</h1>
+<p th:text="${external_url}"></p>
+<br>
+
+<h1>Response</h1>
+<p th:text="${response}"></p>
+<br>
+
+<h1>Response Code</h1>
+<p th:text="${status_code}"></p>
+<br>
+
+<h1>Response Message</h1>
+<p th:text="${status_message}"></p>
+<br>
+
+<h1>Response Body</h1>
+<p th:text="${response_body}"></p>
+<br>
+
+<h1>Response Headers</h1>
+<table>
+  <tr th:each="header : ${response_headers}">
+    <td th:text="${header}"></td>
+  </tr>
+</table>
+
+</body>
+</html>
