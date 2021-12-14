@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<Configuration packages="com.newrelic.logging.log4j2">
+
+	<Appenders>
+
+		<RollingFile name="errorLoggerAppender" fileName="error.log" filePattern="error.log">
+			<Policies>
+				<OnStartupTriggeringPolicy/>
+				<SizeBasedTriggeringPolicy size="1GB"/>
+			</Policies>
+			<DefaultRolloverStrategy max="10"/>
+			<NewRelicLayout/>
+		</RollingFile>
+
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{MM/dd/yyyy HH:mm:ss,SSS} %-5p - %m%n"/>
+<!--			<NewRelicLayout/>-->
+		</Console>
+
+	</Appenders>
+
+	<Loggers>
+		<Logger name="org.springframework.samples.petclinic.system.CrashController" level="ERROR" additivity="false">
+			<AppenderRef ref="errorLoggerAppender"/>
+		</Logger>
+		<Root level="INFO">>
+			<AppenderRef ref="Console"/>
+		</Root>
+	</Loggers>
+
+</Configuration>
