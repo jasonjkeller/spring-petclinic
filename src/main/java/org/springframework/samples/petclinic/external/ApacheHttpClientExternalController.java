@@ -29,7 +29,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 @Controller
-class ExternalController {
+class ApacheHttpClientExternalController {
+
+	private static final String URL = "https://example.com/";
 
 	/**
 	 * Make a request to an external URI
@@ -39,21 +41,44 @@ class ExternalController {
 	 */
 	@GetMapping("/external")
 	public String external(Model model) throws IOException {
-		String url = "https://example.com/";
-		final HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
-		HttpClient client = httpClientBuilder.build();
-		HttpGet request = new HttpGet(url);
-		HttpResponse response = client.execute(request);
+		HttpResponse response = makeHttpRequest();
+		populateModelAttributes(model, response);
+		return "externals/external";
+	}
 
-		model.addAttribute("external_url", url);
+	/**
+	 * Make a Http request
+	 * @return HttpResponse
+	 * @throws IOException in rare cases
+	 */
+	private HttpResponse makeHttpRequest() throws IOException {
+		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+		HttpClient client = httpClientBuilder.build();
+		HttpGet request = new HttpGet(URL);
+		return client.execute(request);
+	}
+
+	/**
+	 * Populate the Model for the view.
+	 * @param model model containing attributes for the view
+	 * @param response HttpResponse
+	 * @throws IOException in rare cases
+	 */
+	private void populateModelAttributes(Model model, HttpResponse response) throws IOException {
+		model.addAttribute("external_url", URL);
 		model.addAttribute("status_code", response.getStatusLine().getStatusCode());
 		model.addAttribute("status_message", response.getStatusLine().getReasonPhrase());
 		model.addAttribute("response", response);
 		model.addAttribute("response_body", getResponseBody(response));
 		model.addAttribute("response_headers", response.getAllHeaders());
-		return "externals/external";
 	}
 
+	/**
+	 * Get a String representing the HttpResponse body
+	 * @param response HttpResponse
+	 * @return HttpResponse body String
+	 * @throws IOException in rare cases
+	 */
 	private String getResponseBody(HttpResponse response) throws IOException {
 		final StringBuilder output = new StringBuilder();
 		// Get the response
