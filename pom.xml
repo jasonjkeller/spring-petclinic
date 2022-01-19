@@ -58,22 +58,7 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-thymeleaf</artifactId>
     </dependency>
-    <!-- exclude spring-boot-starter-logging -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-starter-logging</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <!--  Add slf4j logger  -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-log4j2</artifactId>
-    </dependency>
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
@@ -89,8 +74,8 @@
     <!--  newrelic logging  -->
     <dependency>
       <groupId>com.newrelic.logging</groupId>
-      <artifactId>log4j2</artifactId>
-      <version>2.2</version>
+      <artifactId>logback</artifactId>
+      <version>2.3.1</version>
     </dependency>
 
     <!-- httpclient -->
