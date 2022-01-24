@@ -19,6 +19,8 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.samples.petclinic.visit.Visit;
 import org.springframework.samples.petclinic.visit.VisitRepository;
 import org.springframework.stereotype.Controller;
@@ -39,6 +41,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  */
 @Controller
 class VisitController {
+	private static final Logger LOGGER = LoggerFactory.getLogger(VisitController.class);
 
 	private final VisitRepository visits;
 
@@ -74,12 +77,14 @@ class VisitController {
 	// Spring MVC calls method loadPetWithVisit(...) before initNewVisitForm is called
 	@GetMapping("/owners/*/pets/{petId}/visits/new")
 	public String initNewVisitForm(@PathVariable("petId") int petId, Map<String, Object> model) {
+		LOGGER.info("@GetMapping(\"/owners/*/pets/{petId}/visits/new\")");
 		return "pets/createOrUpdateVisitForm";
 	}
 
 	// Spring MVC calls method loadPetWithVisit(...) before processNewVisitForm is called
 	@PostMapping("/owners/{ownerId}/pets/{petId}/visits/new")
 	public String processNewVisitForm(@Valid Visit visit, BindingResult result) {
+		LOGGER.info("@PostMapping(\"/owners/{ownerId}/pets/{petId}/visits/new\")");
 		if (result.hasErrors()) {
 			return "pets/createOrUpdateVisitForm";
 		}
