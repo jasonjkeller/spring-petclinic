@@ -35,6 +35,7 @@ import java.util.Collection;
 @Controller
 @RequestMapping("/owners/{ownerId}")
 class PetController {
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(PetController.class);
 
 	private static final String VIEWS_PETS_CREATE_OR_UPDATE_FORM = "pets/createOrUpdatePetForm";

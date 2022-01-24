@@ -40,6 +40,7 @@ import java.util.Map;
  */
 @Controller
 class OwnerController {
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(OwnerController.class);
 
 	private static final String VIEWS_OWNER_CREATE_OR_UPDATE_FORM = "owners/createOrUpdateOwnerForm";

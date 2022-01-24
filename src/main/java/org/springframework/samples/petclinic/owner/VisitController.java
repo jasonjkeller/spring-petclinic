@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  */
 @Controller
 class VisitController {
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(VisitController.class);
 
 	private final VisitRepository visits;

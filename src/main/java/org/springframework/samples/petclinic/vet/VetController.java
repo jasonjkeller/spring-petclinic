@@ -31,6 +31,7 @@ import java.util.Map;
  */
 @Controller
 class VetController {
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(VetController.class);
 
 	private final VetRepository vets;

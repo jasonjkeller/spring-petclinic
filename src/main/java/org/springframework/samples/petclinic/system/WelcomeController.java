@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 class WelcomeController {
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(WelcomeController.class);
 
 	@GetMapping("/")
