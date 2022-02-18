@@ -16,3 +16,4 @@ target/*
 _site/
 **/.DS_Store
 logs/*
+error.log
