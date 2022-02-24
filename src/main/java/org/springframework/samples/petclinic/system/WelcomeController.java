@@ -29,6 +29,7 @@ class WelcomeController {
 	@GetMapping("/")
 	public String welcome() {
 		String logMessage = "@GetMapping(\"/\")";
+		LOGGER.warn("foo {}", "bar");
 		LOGGER.info(logMessage);
 		LOGGER.debug(logMessage);
 		LOGGER.trace(logMessage);
