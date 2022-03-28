@@ -34,11 +34,19 @@ class CrashController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CrashController.class);
 
+//	@GetMapping("/oups")
+//	public String triggerException() {
+//		RuntimeException runtimeException = new RuntimeException(
+//				"Expected: controller used to showcase what " + "happens when an exception is thrown");
+//		LOGGER.error(Arrays.toString(runtimeException.getStackTrace()));
+//		throw runtimeException;
+//	}
+
 	@GetMapping("/oups")
 	public String triggerException() {
 		RuntimeException runtimeException = new RuntimeException(
-				"Expected: controller used to showcase what " + "happens when an exception is thrown");
-		LOGGER.error(Arrays.toString(runtimeException.getStackTrace()));
+			"Expected: controller used to showcase what " + "happens when an exception is thrown");
+		LOGGER.error("OH NO!!!!!", runtimeException);
 		throw runtimeException;
 	}
 
