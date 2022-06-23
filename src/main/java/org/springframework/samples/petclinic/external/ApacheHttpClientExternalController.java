@@ -84,7 +84,7 @@ class ApacheHttpClientExternalController {
 		// Get the response
 		BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
-		String line = "";
+		String line;
 		while ((line = rd.readLine()) != null) {
 			output.append(line);
 		}
