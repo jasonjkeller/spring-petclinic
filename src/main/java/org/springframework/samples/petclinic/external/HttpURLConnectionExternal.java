@@ -15,14 +15,14 @@ import java.net.URL;
 
 @Controller
 public class HttpURLConnectionExternal {
+	private static final String URL = "https://example.com/";
 
-	private static final String EXAMPLE_COM = "https://example.com/";
-
+	// private static final String URL =
+	// "http://localhost:8090/httpurlconnection/external";
 	private static final Logger LOGGER = LoggerFactory.getLogger(HttpURLConnectionExternal.class);
-
 	@GetMapping("/httpurlconnection/external")
 	public String httpUrlConn(Model model) throws IOException, URISyntaxException {
-		URI uri = new URI(EXAMPLE_COM);
+		URI uri = new URI(URL);
 		URL url = uri.toURL();
 		java.net.HttpURLConnection con = (java.net.HttpURLConnection) url.openConnection();
 		con.setRequestMethod("GET");
