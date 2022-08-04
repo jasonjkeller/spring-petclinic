@@ -48,6 +48,7 @@ class CrashController {
 		RuntimeException runtimeException = new RuntimeException(
 				"Expected: controller used to showcase what happens when an exception is thrown");
 		LOGGER.error("OH NO!!!!!", runtimeException);
+		LOGGER.error("", runtimeException);
 		throw runtimeException;
 	}
 
