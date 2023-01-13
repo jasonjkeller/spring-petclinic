@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout (~{::body},'lambda')}">
+
+<head>
+  <title>Lambda</title>
+</head>
+
+<body>
+<h1>Key</h1>
+<p th:text="${key}"></p>
+<br>
+
+<h1>Value</h1>
+<p th:text="${value}"></p>
+<br>
+
+</body>
+</html>

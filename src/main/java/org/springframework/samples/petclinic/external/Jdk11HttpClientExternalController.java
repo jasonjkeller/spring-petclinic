@@ -16,6 +16,10 @@
 
 package org.springframework.samples.petclinic.external;
 
+import com.newrelic.api.agent.ExternalParameters;
+import com.newrelic.api.agent.HttpParameters;
+import com.newrelic.api.agent.NewRelic;
+import com.newrelic.api.agent.Segment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,6 +55,21 @@ class Jdk11HttpClientExternalController {
 		// Make a Http request
 		HttpResponse<String> response = HTTP_CLIENT.send(getRequest(), HttpResponse.BodyHandlers.ofString());
 		populateModelAttributes(model, response);
+
+		// ExternalParameters params = HttpParameters
+		// .library(library)
+		// .uri(uri)
+		// .procedure(procedure)
+		// .inboundHeaders(inboundHeaders)
+		// .build();
+		//
+		// NewRelic.getAgent().getTransaction().getTracedMethod().reportAsExternal(params);
+		//
+		// Segment segment =
+		// NewRelic.getAgent().getTransaction().startSegment("MySegment");
+		// segment.reportAsExternal(params);
+		// segment.end();
+
 		return "externals/external";
 	}
 
