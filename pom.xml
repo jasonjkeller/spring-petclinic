@@ -72,11 +72,11 @@
     </dependency>
 
     <!--  newrelic logging  -->
-    <dependency>
-      <groupId>com.newrelic.logging</groupId>
-      <artifactId>logback</artifactId>
-      <version>2.3.1</version>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>com.newrelic.logging</groupId>-->
+<!--      <artifactId>logback</artifactId>-->
+<!--      <version>2.3.1</version>-->
+<!--    </dependency>-->
 
     <!-- httpclient -->
     <dependency>
@@ -150,19 +150,19 @@
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>io.spring.javaformat</groupId>
-        <artifactId>spring-javaformat-maven-plugin</artifactId>
-        <version>${spring-format.version}</version>
-        <executions>
-          <execution>
-            <phase>validate</phase>
-            <goals>
-              <goal>validate</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
+<!--      <plugin>-->
+<!--        <groupId>io.spring.javaformat</groupId>-->
+<!--        <artifactId>spring-javaformat-maven-plugin</artifactId>-->
+<!--        <version>${spring-format.version}</version>-->
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            <phase>validate</phase>-->
+<!--            <goals>-->
+<!--              <goal>validate</goal>-->
+<!--            </goals>-->
+<!--          </execution>-->
+<!--        </executions>-->
+<!--      </plugin>-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>

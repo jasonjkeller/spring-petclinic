@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout (~{::body},'logging')}">
+
+<head>
+  <title>Logging</title>
+</head>
+
+<body>
+<h1>Log Message</h1>
+<p th:text="${message}"></p>
+<br>
+
+</body>
+</html>
