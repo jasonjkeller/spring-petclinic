@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.samples.petclinic.external;
+package org.springframework.samples.petclinic.random;
 
 import com.newrelic.api.agent.NewRelic;
 import com.newrelic.api.agent.TraceLambda;

@@ -14,40 +14,27 @@
  * limitations under the License.
  */
 
-package org.springframework.samples.petclinic.external;
+package org.springframework.samples.petclinic.logging;
 
+import org.jboss.logging.Logger;
+import org.jboss.logging.MDC;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 @Controller
-class JULController {
+class JBossLoggingController {
 
-	private static final Logger LOGGER = Logger.getLogger(JULController.class.getName());
+//	private static final Logger LOGGER = Logger.getLogger(JBossLoggingController.class.getName());
+private static final Logger LOGGER = Logger.getLogger(JBossLoggingController.class.getName());
 
-	@GetMapping("/jul")
+	@GetMapping("/jboss")
 	public String logUsingJavaUtilLogger(Model model) {
-		String logMessage = "Hello world!";
-		LOGGER.setLevel(Level.ALL);
+		String logMessage = "Hello world, from JBoss Logging API!";
 
-		// * <li>SEVERE (highest value)
-		// * <li>WARNING
-		// * <li>INFO
-		// * <li>CONFIG
-		// * <li>FINE
-		// * <li>FINER
-		// * <li>FINEST (lowest value)
-
-		LOGGER.log(Level.SEVERE, logMessage);
-		LOGGER.log(Level.WARNING, logMessage);
-		LOGGER.log(Level.INFO, logMessage);
-		LOGGER.log(Level.CONFIG, logMessage);
-		LOGGER.log(Level.FINE, logMessage);
-		LOGGER.log(Level.FINER, logMessage);
-		LOGGER.log(Level.FINEST, logMessage);
+		MDC.put("foo", "bar");
+		MDC.put("baz", true);
+		LOGGER.info(logMessage);
 
 		model.addAttribute("message", logMessage);
 		return "externals/logging";
