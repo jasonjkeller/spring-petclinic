@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -23,6 +24,13 @@ public class HttpURLConnectionExternal {
 
 //	private static final String URL = "https://example.com/";
 	private static final Logger LOGGER = LoggerFactory.getLogger(HttpURLConnectionExternal.class);
+//	final String URL = "http://localhost:8080/httpurlconnection/getInputStream/external";
+//	URI uri = new URI(URL);
+//	URL url = uri.toURL();
+//	HttpURLConnection con = (HttpURLConnection) url.openConnection();
+
+	public HttpURLConnectionExternal() throws URISyntaxException, IOException {
+	}
 
 	/**
 	 * GET data using HttpURLConnection
@@ -45,24 +53,24 @@ public class HttpURLConnectionExternal {
 			// connect can be called explicitly, but it doesn't need to be as it will implicitly be called by other
 			// methods that read or write over the connection such as getInputStream, getResponseCode, and getOutputStream.
 			// connect doesn't cause a request to be issued does it?????
-			con.connect();
+//			con.connect();
 
 			// getInputStream opens a stream with the intention of reading data from the server
 			// getInputStream opens a connection, then sends GET & headers
 			// con.getInputStream() is what establishes the connection and fires the request
 //			StringBuilder stringBuilder = getInputStreamString(con);
-
+//
 			// getResponseCode gets the status code from an HTTP response message.
 			// If the request was already made (e.g. because getInputStream was called before it) it will simply return the status code from the response.
 			// Otherwise, it will initiate the request itself by calling getInputStream which calls connect (or potentially getOutputStream if streaming).
-//			int responseCode = con.getResponseCode();
+			int responseCode = con.getResponseCode();
 //			String responseMessage = con.getResponseMessage();
 
 			LOGGER.info("Made external call to: " + URL);
 //			LOGGER.info("Response code was: " + responseCode);
 //			LOGGER.info("Response message was: " + responseMessage);
 //			LOGGER.info("Result of getInputStream: " + stringBuilder);
-			LOGGER.info("Header fields: " + con.getHeaderFields());
+//			LOGGER.info("Header fields: " + con.getHeaderFields());
 
 			populateModelAttributes(model, url, con);
 		} catch (IOException e) {
@@ -107,7 +115,7 @@ public class HttpURLConnectionExternal {
 		try {
 			// connect can be called explicitly, but it doesn't need to be as it will implicitly be called by other
 			// methods that read or write over the connection such as getInputStream, getResponseCode, and getOutputStream.
-			con.connect();
+//			con.connect();
 
 			// getOutputStream opens a stream with the intention of writing data to the server but doesn't actually write until you call writer.write
 			OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
@@ -128,7 +136,7 @@ public class HttpURLConnectionExternal {
 
 			LOGGER.info("Made external call to: " + URL);
 			LOGGER.info("Response code was: " + responseCode);
-//			LOGGER.info("Result of getInputStream: " + stringBuilder);
+			LOGGER.info("Result of getInputStream: " + stringBuilder);
 			LOGGER.info("Header fields: " + con.getHeaderFields()); // TODO getHeaderFields causes a request
 			populateModelAttributes(model, url, con);
 		} catch (IOException e) {
