@@ -16,10 +16,15 @@
 
 package org.springframework.samples.petclinic.system;
 
+import com.newrelic.api.agent.NewRelic;
+import com.newrelic.api.agent.Trace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import javax.persistence.TableGenerator;
+import java.util.HashMap;
 
 @Controller
 class WelcomeController {
@@ -28,6 +33,10 @@ class WelcomeController {
 
 	@GetMapping("/")
 	public String welcome() {
+//		tryToExcludeThisMethodFromTrace();
+		HashMap<String, String> map = new HashMap<>();
+		map.put("foo", "bar");
+		NewRelic.getAgent().getInsights().recordCustomEvent("PetClinicWelcomeControllerEvent", map);
 		String logMessage = "@GetMapping(\"/\")";
 		LOGGER.info(logMessage);
 		LOGGER.info("foo {}", "bar");
@@ -36,5 +45,10 @@ class WelcomeController {
 		LOGGER.trace("foo {}", "boo");
 		return "welcome";
 	}
+
+//	@Trace(excludeFromTransactionTrace = true)
+//	public void tryToExcludeThisMethodFromTrace() {
+//		System.out.println("tryToExcludeThisMethodFromTrace");
+//	}
 
 }
