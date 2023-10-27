@@ -39,10 +39,10 @@ class WelcomeController {
 		NewRelic.getAgent().getInsights().recordCustomEvent("PetClinicWelcomeControllerEvent", map);
 		String logMessage = "@GetMapping(\"/\")";
 		LOGGER.info(logMessage);
-		LOGGER.info("foo {}", "bar");
-		LOGGER.warn("foo {}", "bop");
-		LOGGER.debug("foo {}", "baz");
-		LOGGER.trace("foo {}", "boo");
+		LOGGER.info("info {}", "bar");
+		LOGGER.warn("warn {}", "bop");
+		LOGGER.debug("debug {}", "baz");
+		LOGGER.trace("trace {}", "boo");
 		return "welcome";
 	}
 

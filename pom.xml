@@ -74,7 +74,23 @@
       <version>2.2.10.RELEASE</version>
     </dependency>
 
-    <!-- exclude spring-boot-starter-logging -->
+    <!-- Use Jetty instead of Tomcat -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-tomcat</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-jetty</artifactId>
+    </dependency>
+
+      <!-- exclude spring-boot-starter-logging -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
@@ -144,6 +160,19 @@
       <groupId>org.ehcache</groupId>
       <artifactId>ehcache</artifactId>
     </dependency>
+
+    <!-- Jetty HttpClient -->
+<!--    <dependency>-->
+<!--      <groupId>org.eclipse.jetty</groupId>-->
+<!--      <artifactId>jetty-client</artifactId>-->
+<!--      <version>11.0.0</version>-->
+<!--    </dependency>-->
+
+<!--    <dependency>-->
+<!--      <groupId>org.eclipse.jetty</groupId>-->
+<!--      <artifactId>jetty-io</artifactId>-->
+<!--      <version>11.0.0</version>-->
+<!--    </dependency>-->
 
     <!-- Jackson XML deps for Log4j2 XmlLayout-->
     <dependency>

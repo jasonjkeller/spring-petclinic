@@ -57,7 +57,7 @@
 		<!-- Use Pretty XmlLayout for file -->
 		<File name="PrettyXmlAppender" fileName="logs/pretty-xml-layout.xml">
 			<XmlLayout complete="true" compact="false">
-				<KeyValuePair key="message" value="message : this is an additional field" />
+<!--				<KeyValuePair key="message" value="message : this is an additional field" />-->
 			</XmlLayout>
 		</File>
 		<Async name="PrettyXmlAsyncAppender">
@@ -67,7 +67,7 @@
 		<!-- Use Compact XmlLayout for file -->
 		<File name="CompactXmlAppender" fileName="logs/compact-xml-layout.xml">
 			<XmlLayout complete="true" compact="true">
-				<KeyValuePair key="message" value="message : this is an additional field" />
+<!--				<KeyValuePair key="message" value="message : this is an additional field" />-->
 			</XmlLayout>
 		</File>
 		<Async name="CompactXmlAsyncAppender">
@@ -77,7 +77,7 @@
 		<!-- Use YamlLayout for file -->
 		<File name="YamlAppender" fileName="logs/yaml-layout.yml">
 			<YamlLayout>
-				<KeyValuePair key="message" value="message : this is an additional field"/>
+<!--				<KeyValuePair key="message" value="message : this is an additional field"/>-->
 			</YamlLayout>
 		</File>
 		<Async name="YamlAsyncAppender">
@@ -90,6 +90,7 @@
 		<Root level="INFO">
 			<AppenderRef ref="Console"/>
 			<AppenderRef ref="PrettyJsonAsyncAppender"/>
+<!--			<AppenderRef ref="PrettyJsonAppender"/>-->
 			<AppenderRef ref="CompactJsonAsyncAppender"/>
 			<AppenderRef ref="HtmlAsyncAppender"/>
 			<AppenderRef ref="PrettyXmlAsyncAppender"/>
@@ -97,9 +98,9 @@
 			<AppenderRef ref="YamlAsyncAppender"/>
 		</Root>
 
-		<Logger name="org.springframework.samples.petclinic.system.CrashController" level="ERROR" additivity="false">
-			<AppenderRef ref="ErrorLoggerAppender"/>
-		</Logger>
+<!--		<Logger name="org.springframework.samples.petclinic.system.CrashController" level="ERROR" additivity="false">-->
+<!--			<AppenderRef ref="ErrorLoggerAppender"/>-->
+<!--		</Logger>-->
 	</Loggers>
 
 </Configuration>
