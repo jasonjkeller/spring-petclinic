@@ -21,7 +21,7 @@
 		<!-- Use Pretty JsonLayout for file -->
 		<File name="PrettyJsonAppender" fileName="logs/pretty-json-layout.json">
 			<JsonLayout complete="true" compact="false">
-				<KeyValuePair key="message" value="message : this is an additional field" />
+<!--				<KeyValuePair key="message" value="message : this is an additional field" />-->
 			</JsonLayout>
 		</File>
 		<Async name="PrettyJsonAsyncAppender">
@@ -31,7 +31,7 @@
 		<!-- Use Compact JsonLayout for file -->
 		<File name="CompactJsonAppender" fileName="logs/compact-json-layout.json">
 			<JsonLayout complete="true" compact="true">
-				<KeyValuePair key="message" value="message : this is an additional field" />
+<!--				<KeyValuePair key="message" value="message : this is an additional field" />-->
 			</JsonLayout>
 		</File>
 		<Async name="CompactJsonAsyncAppender">
@@ -90,7 +90,6 @@
 		<Root level="INFO">
 			<AppenderRef ref="Console"/>
 			<AppenderRef ref="PrettyJsonAsyncAppender"/>
-<!--			<AppenderRef ref="PrettyJsonAppender"/>-->
 			<AppenderRef ref="CompactJsonAsyncAppender"/>
 			<AppenderRef ref="HtmlAsyncAppender"/>
 			<AppenderRef ref="PrettyXmlAsyncAppender"/>
