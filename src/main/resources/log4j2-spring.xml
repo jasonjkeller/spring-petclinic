@@ -3,10 +3,15 @@
 
 	<Appenders>
 		<Console name="Console" target="SYSTEM_OUT">
-			<!-- Use custom json-layout file found in src/main/resources -->
+			<!-- THIS DOES NOT WORK! Use JsonTemplateLayout with custom json-layout file found in src/main/resources -->
 			<JsonTemplateLayout eventTemplateUri="classpath:json-layout.json"/>
-			<!-- Use default JsonLayout provided by log4j2 -->
+
+			<!-- THIS DOES NOT WORK! Use JsonTemplateLayout with default JsonLayout provided by log4j2 -->
 <!--			<JsonTemplateLayout eventTemplateUri="classpath:JsonLayout.json"/>-->
+
+			<!-- THIS WORKS! Use deprecated JsonLayout provided by log4j2 -->
+<!--			<JsonLayout compact="true" />-->
+
 		</Console>
 	</Appenders>
 
