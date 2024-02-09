@@ -2,104 +2,18 @@
 <Configuration packages="com.newrelic.logging.log4j2">
 
 	<Appenders>
-		<!-- Use PatternLayout for console -->
 		<Console name="Console" target="SYSTEM_OUT">
-			<PatternLayout pattern="%d{MM/dd/yyyy HH:mm:ss,SSS} %-5p - %m%n"/>
-			<!--			<NewRelicLayout/>-->
+			<!-- Use custom json-layout file found in src/main/resources -->
+			<JsonTemplateLayout eventTemplateUri="classpath:json-layout.json"/>
+			<!-- Use default JsonLayout provided by log4j2 -->
+<!--			<JsonTemplateLayout eventTemplateUri="classpath:JsonLayout.json"/>-->
 		</Console>
-
-		<!-- Use error class for file -->
-		<RollingFile name="ErrorLoggerAppender" fileName="logs/error.log" filePattern="error.log">
-			<Policies>
-				<OnStartupTriggeringPolicy/>
-				<SizeBasedTriggeringPolicy size="1GB"/>
-			</Policies>
-			<DefaultRolloverStrategy max="10"/>
-<!--			<NewRelicLayout/>-->
-		</RollingFile>
-
-		<!-- Use Pretty JsonLayout for file -->
-		<File name="PrettyJsonAppender" fileName="logs/pretty-json-layout.json">
-			<JsonLayout complete="true" compact="false">
-<!--				<KeyValuePair key="message" value="message : this is an additional field" />-->
-			</JsonLayout>
-		</File>
-		<Async name="PrettyJsonAsyncAppender">
-			<AppenderRef ref="PrettyJsonAppender"/>
-		</Async>
-
-		<!-- Use Compact JsonLayout for file -->
-		<File name="CompactJsonAppender" fileName="logs/compact-json-layout.json">
-			<JsonLayout complete="true" compact="true">
-<!--				<KeyValuePair key="message" value="message : this is an additional field" />-->
-			</JsonLayout>
-		</File>
-		<Async name="CompactJsonAsyncAppender">
-			<AppenderRef ref="CompactJsonAppender"/>
-		</Async>
-
-		<!-- Use HtmlLayout for file -->
-		<File name="HtmlAppender" fileName="logs/html-layout.html">
-			<HtmlLayout datePattern="ISO8601" timezone="GMT+0"/>
-		</File>
-		<Async name="HtmlAsyncAppender">
-			<AppenderRef ref="HtmlAppender"/>
-		</Async>
-
-		<!-- Use HtmlLayout for file -->
-		<File name="HtmlAppender" fileName="logs/html-layout.html">
-			<HtmlLayout datePattern="ISO8601" timezone="GMT+0"/>
-		</File>
-		<Async name="HtmlAsyncAppender">
-			<AppenderRef ref="HtmlAppender"/>
-		</Async>
-
-		<!-- Use Pretty XmlLayout for file -->
-		<File name="PrettyXmlAppender" fileName="logs/pretty-xml-layout.xml">
-			<XmlLayout complete="true" compact="false">
-<!--				<KeyValuePair key="message" value="message : this is an additional field" />-->
-			</XmlLayout>
-		</File>
-		<Async name="PrettyXmlAsyncAppender">
-			<AppenderRef ref="PrettyXmlAppender"/>
-		</Async>
-
-		<!-- Use Compact XmlLayout for file -->
-		<File name="CompactXmlAppender" fileName="logs/compact-xml-layout.xml">
-			<XmlLayout complete="true" compact="true">
-<!--				<KeyValuePair key="message" value="message : this is an additional field" />-->
-			</XmlLayout>
-		</File>
-		<Async name="CompactXmlAsyncAppender">
-			<AppenderRef ref="CompactXmlAppender"/>
-		</Async>
-
-		<!-- Use YamlLayout for file -->
-		<File name="YamlAppender" fileName="logs/yaml-layout.yml">
-			<YamlLayout>
-<!--				<KeyValuePair key="message" value="message : this is an additional field"/>-->
-			</YamlLayout>
-		</File>
-		<Async name="YamlAsyncAppender">
-			<AppenderRef ref="YamlAppender"/>
-		</Async>
-
 	</Appenders>
 
 	<Loggers>
 		<Root level="INFO">
 			<AppenderRef ref="Console"/>
-			<AppenderRef ref="PrettyJsonAsyncAppender"/>
-			<AppenderRef ref="CompactJsonAsyncAppender"/>
-			<AppenderRef ref="HtmlAsyncAppender"/>
-			<AppenderRef ref="PrettyXmlAsyncAppender"/>
-			<AppenderRef ref="CompactXmlAsyncAppender"/>
-			<AppenderRef ref="YamlAsyncAppender"/>
 		</Root>
-
-<!--		<Logger name="org.springframework.samples.petclinic.system.CrashController" level="ERROR" additivity="false">-->
-<!--			<AppenderRef ref="ErrorLoggerAppender"/>-->
-<!--		</Logger>-->
 	</Loggers>
 
 </Configuration>
