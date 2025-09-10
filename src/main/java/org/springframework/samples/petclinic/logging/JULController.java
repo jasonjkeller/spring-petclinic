@@ -16,10 +16,16 @@
 
 package org.springframework.samples.petclinic.logging;
 
+import com.newrelic.api.agent.NewRelic;
+import com.newrelic.api.agent.Trace;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,7 +56,32 @@ class JULController {
 		LOGGER.log(Level.FINEST, logMessage);
 
 		model.addAttribute("message", logMessage);
+
+		int numOfSegments = 20;
+		for (int i = 0; i < numOfSegments; i++) {
+			createSegments(numOfSegments, i);
+		}
+
 		return "externals/logging";
 	}
 
+	@Trace
+	private void createSegments(int numOfSegments, int segmentNumber) {
+//		NewRelic.getAgent().getTracedMethod().setMetricName("Segment", Integer.toString(segmentNumber));
+		LOGGER.log(Level.INFO, "Segment " + segmentNumber);
+		if (segmentNumber == (numOfSegments - 2)) {
+			NewRelic.addCustomParameter("addCustomParameter", "foo");
+			NewRelic.getAgent().getTracedMethod().addCustomAttribute("getTracedMethod().addCustomAttribute", "bar");
+
+			HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+			HttpClient client = httpClientBuilder.build();
+			HttpGet request = new HttpGet("https://example.com/");
+			try {
+				client.execute(request);
+			} catch (IOException ignored) {
+			}
+
+//			throw new RuntimeException("Error from segmentNumber: " + segmentNumber);
+		}
+	}
 }

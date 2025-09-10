@@ -28,6 +28,7 @@ public class HttpURLConnectionExternal {
 //	URI uri = new URI(URL);
 //	URL url = uri.toURL();
 //	HttpURLConnection con = (HttpURLConnection) url.openConnection();
+	String externalPort = "8088";
 
 	public HttpURLConnectionExternal() throws URISyntaxException, IOException {
 	}
@@ -37,8 +38,9 @@ public class HttpURLConnectionExternal {
 	 */
 	@GetMapping("/httpurlconnection/getInputStream/external")
 	public String getInputStream(Model model) throws IOException, URISyntaxException {
-		final String URL = "http://localhost:8080/httpurlconnection/getInputStream/external";
+//		final String URL = "http://localhost:" + externalPort + "/httpurlconnection/getInputStream/external";
 //		final String URL = "https://example.com/";
+		final String URL = "http://localhost:8086/external";
 
 		URI uri = new URI(URL);
 		URL url = uri.toURL();
@@ -97,8 +99,8 @@ public class HttpURLConnectionExternal {
 	 */
 	@PostMapping("/httpurlconnection/getOutputStream/external")
 	public String getOutputStream(String foo, Model model) throws IOException, URISyntaxException {
-		final String URL = "http://localhost:8080/httpurlconnection/getOutputStream/external?foo=" + foo;
-//		final String URL = "https://example.com/";
+//		final String URL = "http://localhost:" + externalPort + "/httpurlconnection/getOutputStream/external?foo=" + foo;
+		final String URL = "https://example.com/";
 
 		LOGGER.info("Got message: " + foo);
 

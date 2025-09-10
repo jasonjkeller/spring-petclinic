@@ -16,6 +16,11 @@
 
 package org.springframework.samples.petclinic;
 
+import io.opentelemetry.api.GlobalOpenTelemetry;
+import io.opentelemetry.instrumentation.log4j.appender.v2_17.OpenTelemetryAppender;
+import io.opentelemetry.sdk.OpenTelemetrySdk;
+import io.opentelemetry.sdk.OpenTelemetrySdkBuilder;
+import io.opentelemetry.sdk.autoconfigure.AutoConfiguredOpenTelemetrySdk;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
@@ -31,6 +36,9 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 public class PetClinicApplication {
 
 	public static void main(String[] args) {
+		// Find OpenTelemetryAppender in log4j configuration and install openTelemetrySdk
+//		OpenTelemetryAppender.install(GlobalOpenTelemetry.get());
+
 		SpringApplication.run(PetClinicApplication.class, args);
 	}
 

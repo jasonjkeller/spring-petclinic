@@ -3,10 +3,23 @@
 
 	<Appenders>
 		<!-- Use PatternLayout for console -->
+<!--		<Console name="Console" target="SYSTEM_OUT">-->
+<!--			<PatternLayout pattern="%d{MM/dd/yyyy HH:mm:ss,SSS} %-5p - %m%n"/>-->
+<!--			&lt;!&ndash;			<NewRelicLayout/>&ndash;&gt;-->
+<!--		</Console>-->
+
 		<Console name="Console" target="SYSTEM_OUT">
-			<PatternLayout pattern="%d{MM/dd/yyyy HH:mm:ss,SSS} %-5p - %m%n"/>
-			<!--			<NewRelicLayout/>-->
+			<PatternLayout
+				pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} trace_id: %X{trace_id} span_id: %X{span_id} trace_flags: %X{trace_flags} - %msg%n"/>
 		</Console>
+
+		<OpenTelemetry name="OpenTelemetryAppender"
+					   captureExperimentalAttributes="true"
+					   captureCodeAttributes="true"
+					   captureMapMessageAttributes="true"
+					   captureMarkerAttribute="true"
+					   captureContextDataAttributes="*"
+		/>
 
 		<!-- Use error class for file -->
 		<RollingFile name="ErrorLoggerAppender" fileName="logs/error.log" filePattern="error.log">
@@ -89,6 +102,7 @@
 	<Loggers>
 		<Root level="INFO">
 			<AppenderRef ref="Console"/>
+			<AppenderRef ref="OpenTelemetryAppender"/>
 			<AppenderRef ref="PrettyJsonAsyncAppender"/>
 			<AppenderRef ref="CompactJsonAsyncAppender"/>
 			<AppenderRef ref="HtmlAsyncAppender"/>

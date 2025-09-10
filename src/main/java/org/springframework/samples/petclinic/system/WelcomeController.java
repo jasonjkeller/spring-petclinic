@@ -43,6 +43,10 @@ class WelcomeController {
 		LOGGER.warn("warn {}", "bop");
 		LOGGER.debug("debug {}", "baz");
 		LOGGER.trace("trace {}", "boo");
+
+
+//		NewRelic.getAgent().getAiMonitoring().recordLlmFeedbackEvent(new HashMap<>());
+
 		return "welcome";
 	}
 

@@ -12,11 +12,27 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 
+import java.util.HashMap;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import com.newrelic.api.agent.NewRelic;
+import java.util.logging.Level;
 
 @Controller
 public class ReproTwoTransactions {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ReproTwoTransactions.class);
+
+	// FIXME -javaagent:/Users/jkeller/nr/agents/opentelemetry/opentelemetry-javaagent.jar
+
+	// FIXME -Dotel.javaagent.extensions=/Users/jkeller/nr/code/opentelemetry-java-instrumentation/examples/extension/build/libs/opentelemetry-java-instrumentation-extension-demo-1.0-all.jar
+
+	// FIXME -Dotel.javaagent.extensions=/Users/jkeller/nr/code/newrelic-java-agent/newrelic-opentelemetry-agent-extension/build/libs/newrelic-opentelemetry-agent-extension-8.18.0-SNAPSHOT.jar
+
+	// FIXME -Dotel.javaagent.extensions=/Users/jkeller/nr/code/newrelic-java-agent/newrelic-opentelemetry-span-processor-agent-extension/build/libs/newrelic-opentelemetry-span-processor-agent-extension-1.0.jar
+
+	// /Users/jkeller/nr/code/newrelic-java-agent/newrelic-opentelemetry-span-processor-agent-extension/build/libs/newrelic-opentelemetry-span-processor-agent-extension-8.18.0-SNAPSHOT.jar
+
+
 
 //	private final WebClient clientWith10MsTimeout;
 //	private final WebClient client;
@@ -46,6 +62,10 @@ public class ReproTwoTransactions {
 	@GetMapping("/repro/success")
 	public Mono<ResponseEntity<String>> success() {
 		LOGGER.info("in /success handler");
+		NewRelic.getAgent().getLogger().log(Level.INFO, "in doOnSuccess");
+		HashMap<String, Object> atts = new HashMap<>();
+		atts.put("Foo", "Bar");
+		NewRelic.getAgent().getInsights().recordCustomEvent("JasonCustomEvent", atts);
 		return client.get()
 			.uri("https://www.google.com")
 			.retrieve()
@@ -54,6 +74,7 @@ public class ReproTwoTransactions {
 				.contentType(MediaType.TEXT_HTML)
 				.body(s))
 			.doOnSuccess(s -> LOGGER.info("in doOnSuccess"));
+
 	}
 
 	@GetMapping("/repro/hello")
